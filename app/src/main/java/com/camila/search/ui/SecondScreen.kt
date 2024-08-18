@@ -28,41 +28,41 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.camila.search.navigation.NavigationKeys.Companion.SELECTED_STOCKS_KEY
-import com.camila.search.navigation.NavigationKeys.Companion.STOCKS_KEY
-import com.camila.search.data.StockData
+import com.camila.search.navigation.NavigationKeys.Companion.SELECTED_OPTION_KEY
+import com.camila.search.navigation.NavigationKeys.Companion.OPTION_KEY
+import com.camila.search.data.OptionData
 import com.camila.search.ui.component.CardComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectionScreen(
     navController: NavController,
-    viewModel: ProjectViewModel
+    viewModel: ScreensViewModel
 ) {
     val stocks =
-        navController.previousBackStackEntry?.savedStateHandle?.get<List<StockData>>(STOCKS_KEY)
+        navController.previousBackStackEntry?.savedStateHandle?.get<List<OptionData>>(OPTION_KEY)
             ?: emptyList()
 
     val selectedStockId =
-        navController.previousBackStackEntry?.savedStateHandle?.get<String>(SELECTED_STOCKS_KEY)
+        navController.previousBackStackEntry?.savedStateHandle?.get<String>(SELECTED_OPTION_KEY)
 
     var selectedStock by remember {
-        mutableStateOf(stocks.find { it.id == selectedStockId })// Verifica se o estoque está selecionado
+        mutableStateOf(stocks.find { it.id == selectedStockId })
     }
 
     var searchQuery by remember {
-        mutableStateOf("")// Inicializa a pesquisa
+        mutableStateOf("")
     }
 
-    var filteredStocks by remember { mutableStateOf(stocks) }// Inicializa a lista de estoques filtrados
+    var filteredStocks by remember { mutableStateOf(stocks) }
 
-    fun filterByName(query: String): List<StockData> {// Função para filtrar os estoques pelo nome
+    fun filterByName(query: String): List<OptionData> {
         return stocks.filter { stock ->
             stock.name.contains(query, ignoreCase = true)
         }
     }
 
-    filteredStocks = if (searchQuery.isEmpty()) stocks else filterByName(searchQuery)// Atualiza a lista de estoques filtrados
+    filteredStocks = if (searchQuery.isEmpty()) stocks else filterByName(searchQuery)
 
     Scaffold(
         topBar = {
@@ -106,11 +106,11 @@ fun SelectionScreen(
                 ) {
                     filteredStocks.forEach { stock ->
                         CardComponent(
-                            stock = stock,// Passa o estoque para o componente
-                            isSelected = selectedStock?.id == stock.id, // Verifica se o estoque está selecionado
+                            stock = stock,
+                            isSelected = selectedStock?.id == stock.id,
                         ) {
-                            viewModel.selectedStock.value = stock // Atualiza o estoque selecionado
-                            navController.popBackStack() // Fecha a tela atual
+                            viewModel.selectedStock.value = stock
+                            navController.popBackStack()
                         }
                     }
                 }
@@ -125,6 +125,6 @@ fun StockSelectionScreenPreview() {
     val navController = rememberNavController()
     SelectionScreen(
         navController = navController,
-        viewModel = ProjectViewModel()
+        viewModel = ScreensViewModel()
     )
 }

@@ -1,7 +1,7 @@
 package com.camila.search.data
 
 
-data class StockData(
+data class OptionData(
     val id: String?,
     val name: String
 )

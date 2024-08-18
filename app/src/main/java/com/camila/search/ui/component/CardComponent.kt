@@ -23,10 +23,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.camila.search.data.StockData
+import com.camila.search.data.OptionData
 
 @Composable
-fun CardComponent(stock: StockData, isSelected: Boolean, onSelected: () -> Boolean) {
+fun CardComponent(stock: OptionData, isSelected: Boolean, onSelected: () -> Boolean) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -53,7 +53,7 @@ fun CardComponent(stock: StockData, isSelected: Boolean, onSelected: () -> Boole
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = "Estoque selecionado",
+                    contentDescription = "Opção selecionada",
                     tint = Color.Black,
                     modifier = Modifier
                         .background(
@@ -72,8 +72,8 @@ fun CardComponent(stock: StockData, isSelected: Boolean, onSelected: () -> Boole
 @Composable
 fun StockItemPreview() {
     CardComponent(
-        stock = StockData(id = "1", name = "Estoque A"),
-        isSelected = true, // Exibe o item como selecionado
-        onSelected = { true } // Simula a seleção do item
+        stock = OptionData(id = "1", name = "Opção 1"),
+        isSelected = true,
+        onSelected = { true }
     )
 }

@@ -18,19 +18,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.camila.search.navigation.NavigationKeys.Companion.SELECTED_STOCKS_KEY
-import com.camila.search.navigation.NavigationKeys.Companion.STOCKS_KEY
-import com.camila.search.data.StockData
+import com.camila.search.navigation.NavigationKeys.Companion.SELECTED_OPTION_KEY
+import com.camila.search.navigation.NavigationKeys.Companion.OPTION_KEY
 import com.camila.search.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstScreen(
     navController: NavController,
-    viewModel: ProjectViewModel
+    viewModel: ScreensViewModel
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Selecione:") }) },
+        topBar = { TopAppBar(title = { Text("Escolha uma opção:") }) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -46,16 +45,16 @@ fun FirstScreen(
                     .fillMaxWidth(),
                     onClick = {
                         navController.currentBackStackEntry?.savedStateHandle?.set(
-                            STOCKS_KEY,
+                            OPTION_KEY,
                             viewModel.stocks
                         )
                         navController.currentBackStackEntry?.savedStateHandle?.set(
-                            SELECTED_STOCKS_KEY,
+                            SELECTED_OPTION_KEY,
                             viewModel.selectedStock.value?.id ?: viewModel.stocks.firstOrNull()?.id
                         )
-                        navController.navigate(Routes.STOCK_SELECTION_SCREEN.name)
+                        navController.navigate(Routes.SECOND_SCREEN.name)
                     }) {
-                    Text(text = viewModel.selectedStock.value?.name ?: "Selecione um estoque")
+                    Text(text = viewModel.selectedStock.value?.name ?: "Selecione uma opção")
                 }
             }
         })
@@ -67,6 +66,6 @@ fun PreviewCardListScreen() {
     val navController = rememberNavController()
     FirstScreen(
         navController = navController,
-        viewModel = ProjectViewModel()
+        viewModel = ScreensViewModel()
     )
 }
