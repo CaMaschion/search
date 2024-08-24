@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.camila.search.data.OptionData
 
 @Composable
-fun CardComponent(stock: OptionData, isSelected: Boolean, onSelected: () -> Boolean) {
+fun CardComponent(option: OptionData, isSelected: Boolean, onSelected: () -> Unit) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -43,7 +43,7 @@ fun CardComponent(stock: OptionData, isSelected: Boolean, onSelected: () -> Bool
                 .padding(16.dp)
         ) {
             Text(
-                text = stock.name,
+                text = option.name,
                 modifier = Modifier.weight(1f),
                 fontSize = 16.sp,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
@@ -72,7 +72,7 @@ fun CardComponent(stock: OptionData, isSelected: Boolean, onSelected: () -> Bool
 @Composable
 fun StockItemPreview() {
     CardComponent(
-        stock = OptionData(id = "1", name = "Opção 1"),
+        option = OptionData(id = "1", name = "Opção 1"),
         isSelected = true,
         onSelected = { true }
     )

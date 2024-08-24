@@ -25,7 +25,6 @@ import com.camila.search.navigation.Routes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstScreen(
-    navController: NavController,
     viewModel: ScreensViewModel
 ) {
     Scaffold(
@@ -39,25 +38,24 @@ fun FirstScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Button(modifier = Modifier
-                    .padding(16.dp)
-                    .height(48.dp)
-                    .fillMaxWidth(),
-                    onClick = {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            OPTION_KEY,
-                            viewModel.stocks
-                        )
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            SELECTED_OPTION_KEY,
-                            viewModel.selectedStock.value?.id ?: viewModel.stocks.firstOrNull()?.id
-                        )
-                        navController.navigate(Routes.SECOND_SCREEN.name)
-                    }) {
+                Button(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .height(48.dp)
+                        .fillMaxWidth(),
+                    onClick = { goToSecondScreen(viewModel) }
+                ) {
                     Text(text = viewModel.selectedStock.value?.name ?: "Selecione uma opção")
                 }
             }
         })
+}
+
+private fun goToSecondScreen(
+    viewModel: ScreensViewModel,
+) {
+    viewModel.setParametersToNav()
+    viewModel.goToSecondScreen()
 }
 
 @Preview(showBackground = true)
@@ -65,7 +63,6 @@ fun FirstScreen(
 fun PreviewCardListScreen() {
     val navController = rememberNavController()
     FirstScreen(
-        navController = navController,
-        viewModel = ScreensViewModel()
+        viewModel = ScreensViewModel(navController)
     )
 }

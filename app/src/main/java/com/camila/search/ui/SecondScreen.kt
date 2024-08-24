@@ -26,49 +26,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.camila.search.navigation.NavigationKeys.Companion.SELECTED_OPTION_KEY
-import com.camila.search.navigation.NavigationKeys.Companion.OPTION_KEY
 import com.camila.search.data.OptionData
 import com.camila.search.ui.component.CardComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectionScreen(
-    navController: NavController,
     viewModel: ScreensViewModel
 ) {
-    val stocks =
-        navController.previousBackStackEntry?.savedStateHandle?.get<List<OptionData>>(OPTION_KEY)
-            ?: emptyList()
 
-    val selectedStockId =
-        navController.previousBackStackEntry?.savedStateHandle?.get<String>(SELECTED_OPTION_KEY)
+    viewModel.getParametersFromNav()
 
-    var selectedStock by remember {
-        mutableStateOf(stocks.find { it.id == selectedStockId })
+    val selectedOption by remember {
+        mutableStateOf(viewModel.optionDataList?.find { it.id == viewModel.selectedOptionId })
     }
 
     var searchQuery by remember {
         mutableStateOf("")
     }
 
-    var filteredStocks by remember { mutableStateOf(stocks) }
-
-    fun filterByName(query: String): List<OptionData> {
-        return stocks.filter { stock ->
-            stock.name.contains(query, ignoreCase = true)
-        }
-    }
-
-    filteredStocks = if (searchQuery.isEmpty()) stocks else filterByName(searchQuery)
+    var filteredOptions by remember { mutableStateOf(viewModel.optionDataList) }
+    filteredOptions =
+        if (searchQuery.isEmpty()) viewModel.optionDataList else viewModel.filterByName(searchQuery)
 
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { viewModel.goToFirstScreen() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar"
@@ -104,13 +90,12 @@ fun SelectionScreen(
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    filteredStocks.forEach { stock ->
+                    filteredOptions?.forEach { opt ->
                         CardComponent(
-                            stock = stock,
-                            isSelected = selectedStock?.id == stock.id,
+                            option = opt,
+                            isSelected = selectedOption?.id == opt.id,
                         ) {
-                            viewModel.selectedStock.value = stock
-                            navController.popBackStack()
+                            goToFirstScreen(viewModel, opt)
                         }
                     }
                 }
@@ -119,12 +104,19 @@ fun SelectionScreen(
     )
 }
 
+private fun goToFirstScreen(
+    viewModel: ScreensViewModel,
+    opt: OptionData
+) {
+    viewModel.selectedStock.value = opt
+    viewModel.goToFirstScreen()
+}
+
 @Preview(showBackground = true)
 @Composable
 fun StockSelectionScreenPreview() {
     val navController = rememberNavController()
     SelectionScreen(
-        navController = navController,
-        viewModel = ScreensViewModel()
+        viewModel = ScreensViewModel(navController)
     )
 }

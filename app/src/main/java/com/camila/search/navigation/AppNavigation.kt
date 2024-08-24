@@ -12,6 +12,7 @@ import com.camila.search.ui.ScreensViewModel
 import com.camila.search.ui.SelectionScreen
 
 class NavigationKeys {
+
     companion object {
         const val OPTION_KEY = "stocks"
         const val SELECTED_OPTION_KEY = "selectedStocks"
@@ -21,7 +22,7 @@ class NavigationKeys {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    val viewModel = ScreensViewModel()
+    val viewModel = ScreensViewModel(navController)
 
     NavHost(
         navController = navController,
@@ -30,13 +31,11 @@ fun AppNavigation() {
     ) {
         composable(Routes.FIRST_SCREEN.name) {
             FirstScreen(
-                navController = navController,
                 viewModel = viewModel,
             )
         }
         composable(Routes.SECOND_SCREEN.name) {
             SelectionScreen(
-                navController = navController,
                 viewModel = viewModel
             )
         }
